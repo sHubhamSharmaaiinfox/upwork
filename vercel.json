@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "./example/myapp.go",
+      "use": "@vercel/go"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "./example/myapp.go"
+    }
+  ]
+}
