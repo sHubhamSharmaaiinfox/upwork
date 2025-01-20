@@ -1,0 +1,6 @@
+github.com/mnovozhylov/oauth v1.0.0 h1:NpKYVscFckZJhRTN2yXnYd36VEeO/GXG71B/1bgcnjg=
+github.com/mnovozhylov/oauth v1.0.0/go.mod h1:We9IO5yIS79vfXDz44qeTic8NQSSlChWiK4UvaFxOIQ=
+github.com/mnovozhylov/randstr v1.0.3 h1:sbqJKr6FyOlXQbKBd/GUuBAVtqk6AvypgQ1jec5PQhc=
+github.com/mnovozhylov/randstr v1.0.3/go.mod h1:IglDt9BycS758Wn7HWudKgdVjBu9zluFH568Q/HpzfM=
+github.com/upwork/golang-upwork v1.3.5 h1:b+u7Wm4CkV0IFPXZS4sHbE2ZFx2UsCWlZSMUR5eIqz4=
+github.com/upwork/golang-upwork v1.3.5/go.mod h1:VOm5jTQt8gNKs6tFCjONyQdKB/DpefBQYWDF7HsgRnY=
