@@ -1,77 +1,34 @@
-// Example shows how to work with Upwork API
-//
-// Licensed under the Upwork's API Terms of Use;
-// you may not use this file except in compliance with the Terms.
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-// Author::    Maksym Novozhylov (mnovozhilov@upwork.com)
-// Copyright:: Copyright 2015(c) Upwork.com
-// License::   See LICENSE.txt and TOS - https://developers.upwork.com/api-tos.html
 package main
 
 import (
     "fmt"
+    "net/http"
     "bufio"
     "os"
-    //"net/http" //uncomment if you need to setup a custom http client
-    
     "github.com/upwork/golang-upwork/api"
     "github.com/upwork/golang-upwork/api/routers/auth"
-    //"github.com/upwork/golang-upwork/api/routers/mc" // uncomment to test mc examples
 )
 
-const cfgFile = "config.json" // update the path to your config file, or provide properties directly in your code
+const cfgFile = "config.json"
 
-func main() {
-/* it is possible to set up properties from code
-    settings := map[string]string{
-        "consumer_key": "consumerkey",
-        "consumer_secret": "consumersecret",
-    }
-    config := api.NewConfig(settings)
-
-    //or read them from a specific configuration file
-    config := api.ReadConfig(cfgFile)
-    config.Print()
-*/
-/* it is possible to setup a custom http client if needed
-    c := &http.Client{}
-    config := api.ReadConfig(cfgFile)
-    config.SetCustomHttpClient(c)
-    client := api.Setup(config)
-*/
-    
+// This is our Vercel HTTP entrypoint.
+func Handler(w http.ResponseWriter, r *http.Request) {
+    // Any logic that you had in main() can go here:
     client := api.Setup(api.ReadConfig(cfgFile))
-    // we need an access token/secret pair in case we haven't received it yet
     if !client.HasAccessToken() {
         aurl := client.GetAuthorizationUrl("")
+        fmt.Fprintf(w, "Authorization URL: %s\n", aurl)
 
-        // read verifier
+        // For local usage (reading from stdin) you’d remove or adapt for a real web flow
         reader := bufio.NewReader(os.Stdin)
-        fmt.Println("Visit the authorization url and provide oauth_verifier for further authorization")
-        fmt.Println(aurl)
+        fmt.Fprintln(w, "Provide oauth_verifier:")
         verifier, _ := reader.ReadString('\n')
 
         // get access token
         token := client.GetAccessToken(verifier)
-        fmt.Println(token)
+        fmt.Fprintf(w, "Token: %v\n", token)
     }
 
-    // http.Response and []byte will be return, you can use any
-    _, jsonDataFromHttp1 := auth.New(client).GetUserInfo()
-    
-    // here you can Unmarshal received json string, or do any other action(s)
-    fmt.Println(string(jsonDataFromHttp1))
-
-    // getting reports example
-    //params := make(map[string]string)
-    //params["tq"] = "select memo where worked_on >= '05-08-2015'"
-    //params["tqx"] = "out:json"
-    //_, jsonDataFromHttp4 := timereports.New(client).GetByFreelancerFull(params)
-    //fmt.Println(string(jsonDataFromHttp4))
+    _, jsonDataFromHttp := auth.New(client).GetUserInfo()
+    fmt.Fprintf(w, "User Info: %s\n", string(jsonDataFromHttp))
 }
